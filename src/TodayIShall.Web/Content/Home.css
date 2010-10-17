@@ -1,0 +1,18 @@
+﻿body { background-image: none;}
+
+div#content
+{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: White;
+    padding: 10px;   
+    margin-top: 98px;
+}
+
+input.signin
+{
+    height: 40px;
+	width: 60%;
+	font-size: 1.0em;	
+}

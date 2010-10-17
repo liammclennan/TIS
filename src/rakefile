@@ -1,0 +1,53 @@
+
+require 'rubygems'
+require 'albacore'
+require 'fileutils'
+require 'rexml/document'
+require 'config_tasks'
+
+task :default => [:package,:update_config]
+
+PROJECT_ROOT = File.join(File.dirname(__FILE__), '..')
+SLN_NAME = 'TodayIShall'
+BUILD_WEB_DIR = File.join(PROJECT_ROOT, 'build/web')
+SRC_WEB_DIR = File.join(PROJECT_ROOT, 'src/TodayIShall.Web')
+CONN_STRING = 'http://localhost:8090/'
+
+msbuild :build do |msb|
+	msb.path_to_command = 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe'
+    msb.properties :configuration => :Release 
+    msb.targets :Rebuild
+    msb.solution = "#{SLN_NAME}.sln"
+end
+
+nunit :test do |nunit|
+	nunit.path_to_command = File.join PROJECT_ROOT,"/lib/NUnit-2.5.7.10213/NUnit-2.5.7.10213/bin/net-2.0/nunit-console.exe"
+	nunit.assemblies File.join PROJECT_ROOT, "src/TodayIShall.Test/bin/Release/TodayIShall.Test.dll"
+end
+
+task :clear do
+	rm_rf BUILD_WEB_DIR
+	mkdir_p BUILD_WEB_DIR
+end
+
+task :package => [:clear, :build, :test] do
+	cp_r File.join(SRC_WEB_DIR, '/.'), BUILD_WEB_DIR	
+	rm Dir.glob(File.join(BUILD_WEB_DIR, '/*.{user,csproj}'))
+	rm_rf File.join(BUILD_WEB_DIR, '/obj')
+	rm_rf File.join(BUILD_WEB_DIR, '/Controllers')
+	rm_rf File.join(BUILD_WEB_DIR, '/Infrastructure')
+	rm_rf File.join(BUILD_WEB_DIR, '/Models')
+	rm_rf File.join(BUILD_WEB_DIR, '/Properties')
+	rm_rf Dir.glob(File.join(BUILD_WEB_DIR, '**/.svn'))
+end
+
+task :update_config do
+	config = {}
+	File.open(File.join(BUILD_WEB_DIR, 'web.config')) do |config_file|
+		config = REXML::Document.new(config_file)
+		ConfigTasks.set_debug_compilation config, false
+		ConfigTasks.set_app_setting(config, 'RavenUrl', CONN_STRING)
+	end
+	ConfigTasks.write_xml_to_file config, File.join(BUILD_WEB_DIR, 'web.config')
+end
+

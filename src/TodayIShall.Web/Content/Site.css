@@ -1,0 +1,85 @@
+﻿
+a, a:hover, a:visited
+{
+    color: Black;
+}
+
+body
+{
+	background-image:url('Images/binder_bg.gif');
+	background-repeat:repeat-x;
+	background-color: #E2D8A5;
+	margin:0;
+	padding: 0;
+	font-family:Verdana;
+	font-size: 2em;
+}
+
+.header
+{
+	height: 98px;
+	width: 100%;
+	text-align:center;
+}
+
+.content
+{
+	padding: 5px 20px 5px 20px;
+	background-color: white;
+}
+
+.lines
+{
+	
+}
+
+.line
+{
+	border-bottom: 1px solid #97c7df;
+	height: 48px;
+	padding-top: 2px;
+	vertical-align: bottom;
+}
+
+.heading
+{
+margin:0;
+}
+
+input.goal
+{
+	height: 40px;
+	width: 100%;
+	font-size: 1.0em;	
+}
+
+input.toggle
+{
+	float: right;
+	height: 40px;
+	width: 40px;
+	padding: 0;
+	margin: 0;
+}
+
+div.done
+{
+	text-decoration: line-through;
+}
+
+.field-validation-error
+{
+    color: Red;
+}
+
+img.delete
+{
+    width: 40px; height: 40px;
+    margin-left: 20px;
+    float:right;
+}
+
+span.hidden_error
+{
+    display: none;
+}
